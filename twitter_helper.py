@@ -131,23 +131,22 @@ def send_to_gpt(tweets):
 
 
 def send_request(tweet):
-    LLM_INITIAL_INSTRUCTIONS = [
-        {
-            "role": "user",
-            "content": f"""Craft a thoughtful and engaging response to the following tweet(max 200 chars), expressing your genuine thoughts and feelings on the topic. Respond with wit and a unique perspective, ensuring humor is subtle and used sparingly. Provide clear, informative replies to necessary tweets. Adjust the tone according to the context of the tweet. Keep responses concise and relevant. Avoid using common, overused words such as 'wow,' 'amazing,' or 'incredible.' Instead, focus on providing meaningful commentary or sharing a personal perspective. Do not use word "reply" at the beginning of reply. just answer with a reply tweet. Make sure your reply does not acceed 200 character limit.
-
-                        Tweet:
-                        {tweet['text']}""",
-        },
-        {
-            "role": "system",
-            "content": f"""Generate a friendly and contextually relevant reply to the provided tweet. Ensure that the response is in a conversational tone and appears as a natural and informal, human reply. Additionally, after providing the reply, share your own views or opinions on the tweet. Please keep both the reply and your views concise. Make sure your reply does not acceed 200 character limit.""",
-        },
-    ]
     try:
         response = gpt_client.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=LLM_INITIAL_INSTRUCTIONS,
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"""Craft a thoughtful and engaging response to the following tweet(max 200 chars), expressing your genuine thoughts and feelings on the topic. Respond with wit and a unique perspective, ensuring humor is subtle and used sparingly. Provide clear, informative replies to necessary tweets. Adjust the tone according to the context of the tweet. Keep responses concise and relevant. Avoid using common, overused words such as 'wow,' 'amazing,' or 'incredible.' Instead, focus on providing meaningful commentary or sharing a personal perspective. Do not use word "reply" at the beginning of reply. just answer with a reply tweet. Make sure your reply does not acceed 200 character limit.
+
+                        Tweet:
+                        {tweet['text']}""",
+                },
+                {
+                    "role": "system",
+                    "content": f"""Generate a friendly and contextually relevant reply to the provided tweet. Ensure that the response is in a conversational tone and appears as a natural and informal, human reply. Additionally, after providing the reply, share your own views or opinions on the tweet. Please keep both the reply and your views concise. Make sure your reply does not acceed 200 character limit.""",
+                },
+            ],
             max_tokens=70,
             temperature=0.7,
         )
